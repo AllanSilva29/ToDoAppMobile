@@ -22,7 +22,7 @@ export default function TabOneScreen() {
         </Paragraph>
       </XStack>
       <XStack ai="center" jc="center" fw="wrap" b="$8">
-        <Link href="/modal" asChild>
+        <Link href="/create-task" asChild>
           <Button
             bg="$purple8"
             alignSelf="center"
