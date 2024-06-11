@@ -1,48 +1,37 @@
-import { ExternalLink } from '@tamagui/lucide-icons'
-import { Anchor, H2, Paragraph, XStack, YStack } from 'tamagui'
-import { ToastControl } from 'app/CurrentToast'
+import { Plus } from "@tamagui/lucide-icons";
+import { Link } from "expo-router";
+import { Button, H3, Paragraph, XStack, YStack } from "tamagui";
+import { Image } from "tamagui";
 
 export default function TabOneScreen() {
   return (
-    <YStack f={1} ai="center" gap="$8" px="$10" pt="$5">
-      <H2>Tamagui + Expo</H2>
-
-      <ToastControl />
-
-      <XStack ai="center" jc="center" fw="wrap" gap="$1.5" pos="absolute" b="$8">
-        <Paragraph fos="$5">Add</Paragraph>
-
-        <Paragraph fos="$5" px="$2" py="$1" col="$blue10" bg="$blue5" br="$3">
-          tamagui.config.ts
-        </Paragraph>
-
-        <Paragraph fos="$5">to root and follow the</Paragraph>
-
-        <XStack
-          ai="center"
-          gap="$1.5"
-          px="$2"
-          py="$1"
-          br="$3"
-          bg="$purple5"
-          hoverStyle={{ bg: '$purple6' }}
-          pressStyle={{ bg: '$purple4' }}
-        >
-          <Anchor
-            href="https://tamagui.dev/docs/core/configuration"
-            textDecorationLine="none"
-            col="$purple10"
-            fos="$5"
-          >
-            Configuration guide
-          </Anchor>
-          <ExternalLink size="$1" col="$purple10" />
-        </XStack>
-
-        <Paragraph fos="$5" ta="center">
-          to configure your themes and tokens.
+    <YStack f={1} y={200} gap="$8" px="$10" pt="$5" alignSelf="center">
+      <XStack ai="center" jc="center" fw="wrap" b="$8">
+        <Image
+          source={{
+            uri: "assets/images/checklist-rafiki.png",
+            width: 140,
+            height: 180,
+          }}
+        />
+        <H3 ta="center" mb="$4">
+          O que você vai fazer hoje?
+        </H3>
+        <Paragraph ta="center">
+          Toque em + para adicionar suas tarefas
         </Paragraph>
       </XStack>
+      <XStack ai="center" jc="center" fw="wrap" b="$8">
+        <Link href="/modal" asChild>
+          <Button
+            bg="$purple8"
+            alignSelf="center"
+            icon={Plus}
+            size="$5"
+            circular
+          ></Button>
+        </Link>
+      </XStack>
     </YStack>
-  )
+  );
 }
