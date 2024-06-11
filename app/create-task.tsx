@@ -1,14 +1,11 @@
 import { View, YStack } from "tamagui";
-import { CustomInput } from "app/components/CustomInput";
+import { CreateTaskInput } from "app/components/CreateTaskInput";
 import { AnimatedGif } from "./components/AnimatedGif";
 
 export default function CreateTaskScreen() {
   return (
     <View flex={1} alignItems="center" justifyContent="center">
-      <YStack
-        margin="$3"
-        padding="$2"
-      >
+      <YStack margin="$3" padding="$2">
         <AnimatedGif />
       </YStack>
 
@@ -19,7 +16,14 @@ export default function CreateTaskScreen() {
         margin="$3"
         padding="$2"
       >
-        <CustomInput size="$4" placeholder="Vou fazer as compras e..." />
+        <CreateTaskInput
+          size="$4"
+          placeholder="Vou fazer as compras e..."
+          toast={{
+            title: "Tarefa criada com sucesso!",
+            message: "Você pode acompanhar suas as tarefas na Home.",
+          }}
+        />
       </YStack>
     </View>
   );
