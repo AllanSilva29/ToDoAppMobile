@@ -1,9 +1,9 @@
-import { Link, Tabs } from 'expo-router'
-import { Button, useTheme } from 'tamagui'
-import { Home, NotebookPen, CalendarDays, Cog } from '@tamagui/lucide-icons'
+import { Link, Tabs } from "expo-router";
+import { Button, useTheme } from "tamagui";
+import { Home, NotebookPen, CalendarDays, Cog } from "@tamagui/lucide-icons";
 
 export default function TabLayout() {
-  const theme = useTheme()
+  const theme = useTheme();
 
   return (
     <Tabs
@@ -14,7 +14,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Seja bem-vindo(a)!',
+          title: "Seja bem-vindo(a)!",
           tabBarIcon: ({ color }) => <Home color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
@@ -26,27 +26,26 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="tasks"
         options={{
-          title: 'Tarefas',
+          title: "Tarefas Concluídas",
           tabBarIcon: ({ color }) => <NotebookPen color={color} />,
         }}
       />
       <Tabs.Screen
-        name="lula"
+        name="calendar"
         options={{
-          title: 'Calendário',
+          title: "Calendário",
           tabBarIcon: ({ color }) => <CalendarDays color={color} />,
         }}
       />
-       <Tabs.Screen
-        name="four"
+      <Tabs.Screen
+        name="config"
         options={{
-          title: 'Configurações',
+          title: "Configurações",
           tabBarIcon: ({ color }) => <Cog color={color} />,
         }}
       />
     </Tabs>
-    
-  )
+  );
 }
