@@ -60,3 +60,4 @@ apps/studio/types/**
 .expo
 
 app/(tabs)/index.tsx.old
+backend/db.json

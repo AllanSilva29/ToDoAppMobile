@@ -15,11 +15,15 @@ export function CreateTaskInput(props: {
 
   const onChangeTask = (value: string) => setTask(value);
   const createTask = () => {
+    if (!task) return;
     toast.show(props.toast.title, {
       message: props.toast.message,
     });
-    axios.get(`${api.baseUrl}/test`).then((response) => console.log(response));
-    console.log(task);
+
+    axios
+      .post(`${api.baseUrl}/tasks`, { description: task, status: "doing" })
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error));
   };
 
   return (
