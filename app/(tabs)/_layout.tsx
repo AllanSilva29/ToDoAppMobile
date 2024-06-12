@@ -17,7 +17,7 @@ export default function TabLayout() {
           title: "Home",
           tabBarIcon: ({ color }) => <Home color={color} />,
           headerRight: () => (
-            <Link href="/modal" asChild>
+            <Link href="/hello" asChild>
               <Button mr="$4" bg="$purple8" color="$purple12">
                 Hello!
               </Button>
