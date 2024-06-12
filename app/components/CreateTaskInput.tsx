@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { api } from "backend/api";
+import { useRouter } from "expo-router";
 import { Button, Input, SizeTokens, XStack } from "tamagui";
 import { useToastController } from "@tamagui/toast";
 
@@ -10,6 +11,7 @@ export function CreateTaskInput(props: {
   toast: { title: string; message: string };
 }) {
   const toast = useToastController();
+  const router = useRouter();
 
   const [task, setTask] = React.useState("");
 
@@ -22,7 +24,9 @@ export function CreateTaskInput(props: {
 
     axios
       .post(`${api.baseUrl}/tasks`, { description: task, status: "doing" })
-      .then((response) => console.log(response))
+      .then(() => {
+        router.push({ pathname: "/", params: { refresh: 1 } });
+      })
       .catch((error) => console.log(error));
   };
 

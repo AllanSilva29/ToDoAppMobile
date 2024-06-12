@@ -20,8 +20,8 @@ export default function CreateTaskScreen() {
           size="$4"
           placeholder="Vou fazer as compras e..."
           toast={{
-            title: "Tarefa criada com sucesso!",
-            message: "Você pode acompanhar suas as tarefas na Home.",
+            title: "Tarefa criada",
+            message: "Tarefa criada com sucesso!",
           }}
         />
       </YStack>
