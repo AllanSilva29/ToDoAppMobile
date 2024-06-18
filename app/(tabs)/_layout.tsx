@@ -26,7 +26,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="tasks"
+        name="tasksDone"
         options={{
           title: "Tarefas Concluídas",
           tabBarIcon: ({ color }) => <NotebookPen color={color} />,
