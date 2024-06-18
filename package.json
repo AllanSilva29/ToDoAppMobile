@@ -9,6 +9,7 @@
     "android": "npx expo start --android",
     "ios": "npx expo start --ios",
     "web": "npx expo start --web",
+    "back": "nohup npx json-server -w backend/db.json &",
     "test": "jest --watchAll"
   },
   "jest": {
