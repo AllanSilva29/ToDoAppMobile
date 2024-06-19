@@ -4,7 +4,16 @@ import { AnimatedGif } from "./components/AnimatedGif";
 
 export default function CreateTaskScreen() {
   return (
-    <View flex={1} alignItems="center" justifyContent="center">
+    <View
+      flex={1}
+      alignItems="center"
+      justifyContent="center"
+      enterStyle={{
+        opacity: 0,
+        x: -50,
+      }}
+      animation="quick"
+    >
       <YStack margin="$3" padding="$2">
         <AnimatedGif />
       </YStack>

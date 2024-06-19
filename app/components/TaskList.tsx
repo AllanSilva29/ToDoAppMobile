@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Check, X } from "@tamagui/lucide-icons";
+
 import {
   Button,
   Paragraph,
@@ -19,12 +20,13 @@ interface Task {
   checked: boolean;
 }
 
-export function TaskList({ tasks, isDone, setters, fetchTasks, ...props }) {
+export function TaskList({ tasks, isDone, setters, apiMethods, ...props }) {
   useEffect(() => {
     if (props.params.refresh) {
-      fetchTasks();
+      apiMethods.fetchTasks();
+      props.params.refresh = 0;
     }
-  }, []);
+  }, [props.params.refresh]);
 
   const checkIfAnyTaskIsDone = (tasks: Task[]) => {
     const doneTask = tasks.find((task) => task.status === "done");
@@ -66,13 +68,21 @@ export function TaskList({ tasks, isDone, setters, fetchTasks, ...props }) {
     checkIfAnyTaskIsDone(newTasks);
   };
 
+  const removeAndRedirectDoneTasks = () => {
+    const notDoneTasks = tasks.filter((task: Task) => task.status !== "done");
+
+    setters.setTasks(notDoneTasks);
+    setters.setIsDone(false);
+    apiMethods.postDoneTasks();
+  };
+
   if (tasks.length === 0) return <></>;
   const renderTasks = tasks.map((task: Task) => (
     <XStack key={task.id} ai="center" jc="flex-end" mt="$2">
       <XStack ai="center" jc="flex-end" gap="$2">
         <Checkbox
           checked={task.checked}
-          size="$4"
+          size="$5"
           onCheckedChange={() => toggleTaskStatus(task.id)}
         >
           <Checkbox.Indicator>
@@ -80,7 +90,7 @@ export function TaskList({ tasks, isDone, setters, fetchTasks, ...props }) {
           </Checkbox.Indicator>
         </Checkbox>
         <Text
-          width={200}
+          width={160}
           mr="$3"
           style={
             task.status === "done"
@@ -105,6 +115,7 @@ export function TaskList({ tasks, isDone, setters, fetchTasks, ...props }) {
   return (
     <YStack f={1} gap="$8" px="$10" pt="$5" alignSelf="center">
       <ScrollView
+        width={340}
         maxHeight={"80%"}
         backgroundColor="$background"
         padding="$4"
@@ -115,11 +126,15 @@ export function TaskList({ tasks, isDone, setters, fetchTasks, ...props }) {
       </ScrollView>
       {isDone ? (
         <XStack ai="center" jc="center" fw="wrap" b="$14" gap="$4">
-          <Button icon={Check} backgroundColor={"$green10"}></Button>
+          <Button
+            icon={Check}
+            backgroundColor={"$green10"}
+            onPress={() => removeAndRedirectDoneTasks()}
+          ></Button>
           <Button
             icon={X}
             backgroundColor={"$red10"}
-            onPress={uncheckAllTasks}
+            onPress={() => uncheckAllTasks()}
           ></Button>
         </XStack>
       ) : (
