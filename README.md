@@ -9,7 +9,7 @@ O TodoApp é um aplicativo completo para gerenciar suas tarefas do dia a dia, de
 **Pré-requisitos:**
 
 * Node.js instalado (versão LTS ou superior)
-* yarn ou npm instalado globalmente (opcional, mas recomendado)
+* yarn ou npm instalado globalmente
 
 **Passo a Passo:**
 
