@@ -1,6 +1,6 @@
 import { Anchor, Paragraph, XStack, YStack } from "tamagui";
 
-export default function Hello() {
+export default function BoasVindas() {
   return (
     <YStack f={1} y={200} ai="center" gap="$8" px="$10" pt="$5">
       <XStack
@@ -14,12 +14,12 @@ export default function Hello() {
         <Paragraph fos="$5">Olá,</Paragraph>
 
         <Paragraph fos="$5" px="$2" py="$1" col="$blue10" bg="$blue5" br="$3">
-          querido usuário
+          querido usuário!
         </Paragraph>
 
-        <Paragraph fos="$5">!</Paragraph>
-
-        <Paragraph textAlign="center" fos="$5">Este app foi feito na disciplina de</Paragraph>
+        <Paragraph textAlign="center" fos="$5">
+          Este app foi feito na disciplina de
+        </Paragraph>
 
         <XStack
           ai="center"

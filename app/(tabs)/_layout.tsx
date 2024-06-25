@@ -1,6 +1,6 @@
 import { Link, Tabs } from "expo-router";
 import { Button, useTheme } from "tamagui";
-import { Home, NotebookPen, CalendarDays, Cog } from "@tamagui/lucide-icons";
+import { Home, NotebookPen, Cog } from "@tamagui/lucide-icons";
 
 export default function TabLayout() {
   const theme = useTheme();
@@ -17,9 +17,9 @@ export default function TabLayout() {
           title: "Home",
           tabBarIcon: ({ color }) => <Home color={color} />,
           headerRight: () => (
-            <Link href="/hello" asChild>
+            <Link href="/welcome" asChild>
               <Button mr="$4" bg="$purple8" color="$purple12">
-                Hello!
+                Boas vindas!
               </Button>
             </Link>
           ),
@@ -30,13 +30,6 @@ export default function TabLayout() {
         options={{
           title: "Tarefas Concluídas",
           tabBarIcon: ({ color }) => <NotebookPen color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="calendar"
-        options={{
-          title: "Calendário",
-          tabBarIcon: ({ color }) => <CalendarDays color={color} />,
         }}
       />
       <Tabs.Screen

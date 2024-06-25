@@ -1,11 +1,16 @@
 import axios from "axios";
 import { api } from "backend/api";
-import { useEffect, useState } from "react";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useState, useEffect } from "react";
+import { useRouter } from "expo-router";
 import { H3, Paragraph, XStack, YStack, Image } from "tamagui";
 import { TaskList } from "app/components/TaskList";
 import { CreateTaskButton } from "app/components/CreateTaskButton";
 import { useToastController } from "@tamagui/toast";
+import { useSelector, useDispatch } from "react-redux";
+import { RefreshButton } from "app/components/RefreshButton";
+import { refreshButtonTasks } from "redux/todo/todoActions.js";
+import { fetchData } from "utils/apiCalls";
+import { getGradient } from "utils/getGradient.js";
 
 interface Task {
   id: string;
@@ -15,66 +20,66 @@ interface Task {
 }
 
 export default function TabHomeScreen() {
-  const [tasks, setTasks] = useState<Task[]>([]);
   const [isDone, setIsDone] = useState(false);
-  const params = useLocalSearchParams();
   const toast = useToastController();
   const router = useRouter();
+  const dispatch = useDispatch();
 
-  async function fetchTasks() {
-    const response = await axios.get(`${api.baseUrl}/tasks`);
+  const appTheme = useSelector((state: any) => state.todoStore.appTheme);
+  const tasks: Task[] = useSelector((state: any) => state.todoStore.todos);
+  const refreshButton = useSelector(
+    (state: any) => state.todoStore.refreshButton
+  );
 
-    setTasks(
-      response.data.map((task: Task) => {
-        return {
-          ...task,
-          checked: false,
-        };
-      })
-    );
-  }
+  const refreshTasks = () => {
+    fetchData({ type: "tasks" });
+    dispatch(refreshButtonTasks({ refreshButton: false }));
+  };
 
-  function postDoneTasks() {
-    tasks.forEach((task) => {
-      if (task.status === "done") {
-        const taskDone = {
-          description: task.description,
-          status: task.status,
-        };
+  function postDoneTasks(doneTasks: Task[]) {
+    let promises: any[] = [];
+    doneTasks.forEach((task) => {
+      const taskDone = {
+        description: task.description,
+        status: task.status,
+      };
 
-        axios.post(`${api.baseUrl}/done-tasks`, taskDone).then(() => {
-          deleteDoneTask(task.id);
-          toast.show("Deletado", {
-            message: "Tarefas finalizadas com sucesso.",
-          });
-          router.push({ pathname: "/tasksDone", params: { refresh: 1 } });
-        });
-      }
+      const sleep = (ms: any) => new Promise((r) => setTimeout(r, ms));
+
+      sleep(500).then(async () => {
+        promises.push(
+          await axios
+            .post(`${api.baseUrl}/done-tasks`, taskDone)
+            .then(async () => {
+              await deleteDoneTask(task.id);
+            })
+            .catch((error) => {
+              console.log(error);
+            })
+        );
+      });
+    });
+    Promise.all(promises).then(() => {
+      toast.show("Deletado", {
+        message: "Tarefas finalizadas com sucesso.",
+      });
+      fetchData({ type: "all" });
+      router.push({ pathname: "tasksDone" });
     });
   }
 
   async function deleteDoneTask(id: string) {
     await axios.delete(`${api.baseUrl}/tasks/${id}`);
-
-    fetchTasks();
+    fetchData({ type: "tasks" });
   }
 
   useEffect(() => {
-    fetchTasks();
+    fetchData({ type: "tasks" });
   }, []);
 
   return (
-    <YStack
-      f={1}
-      p="$4"
-      enterStyle={{
-        opacity: 0,
-        scale: 1.5,
-        x: -50,
-      }}
-      animation="quick"
-    >
-      {tasks.length === 0 && (
+    <YStack f={1} p="$4" style={{ backgroundColor: appTheme }}>
+      {!tasks.length ? (
         <>
           <YStack f={1} y={150} gap="$8" px="$10" pt="$5" alignSelf="center">
             <XStack ai="center" jc="center" fw="wrap" b="$8">
@@ -95,17 +100,23 @@ export default function TabHomeScreen() {
             </XStack>
           </YStack>
           <YStack f={1} y={150} gap="$8" px="$10" pt="$5" alignSelf="center">
-            <CreateTaskButton />
+            {refreshButton ? (
+              <RefreshButton href={"/"} onPress={() => refreshTasks()} />
+            ) : (
+              <CreateTaskButton />
+            )}
           </YStack>
         </>
+      ) : (
+        <TaskList
+          tasks={tasks}
+          color={getGradient(appTheme, "#ffffff")}
+          checkColor={appTheme}
+          isDone={isDone}
+          parentSetters={{ setIsDone }}
+          apiMethods={{ postDoneTasks }}
+        />
       )}
-      <TaskList
-        tasks={tasks}
-        isDone={isDone}
-        setters={{ setTasks, setIsDone }}
-        apiMethods={{ fetchTasks, postDoneTasks }}
-        params={params}
-      />
     </YStack>
   );
 }

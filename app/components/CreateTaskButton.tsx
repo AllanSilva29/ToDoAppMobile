@@ -4,7 +4,7 @@ import { Button, XStack } from "tamagui";
 
 export function CreateTaskButton() {
   return (
-    <XStack ai="center" jc="center" fw="wrap" b="$14">
+    <XStack ai="center" jc="center" fw="wrap" b="$12">
       <Link href="/create-task" asChild>
         <Button
           bg="$purple8"

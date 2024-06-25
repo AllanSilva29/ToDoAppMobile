@@ -1,7 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Text, XStack, YStack, ScrollView, Button, Checkbox } from "tamagui";
 import { X, ListEnd, Check, Trash } from "@tamagui/lucide-icons";
 import { useToastController } from "@tamagui/toast";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchData } from "utils/apiCalls";
+
+import { RefreshButton } from "./RefreshButton";
+import { refreshButtonTasks } from "redux/todo/todoActions.js";
 
 interface Task {
   id: string;
@@ -13,38 +18,46 @@ interface Task {
 interface DoneTaskListProps {
   doneTasks: Task[];
   checkedAny: boolean;
-  setters: any;
+  parentSetters: any;
   apiMethods: any;
-  params: any;
 }
 
 export function DoneTaskList({
   doneTasks,
   checkedAny,
-  setters,
+  parentSetters,
   apiMethods,
   ...props
 }: DoneTaskListProps) {
-  useEffect(() => {
-    if (props.params.refresh) {
-      apiMethods.fetchDoneTasks();
-      props.params.refresh = 0;
-    }
-  }, [props.params.refresh]);
-
+  const [doneTaskList, setDoneTaskList] = useState<Task[]>([]);
   const toast = useToastController();
+  const dispatch = useDispatch();
+
+  const refreshButton = useSelector(
+    (state: any) => state.todoStore.refreshButton
+  );
+
+  useEffect(() => {
+    setDoneTaskList(doneTasks);
+  }, [doneTasks]);
+
+  const refreshTasks = () => {
+    fetchData({ type: "done-tasks" });
+    dispatch(refreshButtonTasks({ refreshButton: false }));
+  };
 
   const sendDoneTasks = () => {
-    const newTasks = doneTasks.filter((task: Task) => task.status !== "doing");
+    const newTasks = doneTaskList.filter(
+      (task: Task) => task.status === "doing"
+    );
 
-    setters.setDoneTasks(newTasks);
-    setters.setCheckedAny(false);
-    apiMethods.revertDoneTasks();
-    
+    parentSetters.setCheckedAny(false);
+    dispatch(refreshButtonTasks({ refreshButton: true }));
+    apiMethods.revertDoneTasks(newTasks);
   };
 
   const deleteCheckedTasks = () => {
-    doneTasks.forEach((task) => {
+    doneTaskList.forEach((task) => {
       if (task.checked) {
         apiMethods.deleteDoneTasks(task.id);
       }
@@ -55,18 +68,18 @@ export function DoneTaskList({
     });
   };
 
-  const checkIfAnyTaskToRevert = (doneTasks: Task[]) => {
-    const willRevert = doneTasks.find((task) => task.status === "doing");
+  const checkIfAnyTaskToRevert = (doneTaskList: Task[]) => {
+    const willRevert = doneTaskList.find((task) => task.status === "doing");
 
     if (willRevert) {
-      setters.setCheckedAny(true);
+      parentSetters.setCheckedAny(true);
     } else {
-      setters.setCheckedAny(false);
+      parentSetters.setCheckedAny(false);
     }
   };
 
   const toggleTaskCheck = (id: string) => {
-    const newTasks: Task[] = doneTasks.map((task: Task) => {
+    const newTasks: Task[] = doneTaskList.map((task: Task) => {
       if (task.id === id) {
         return {
           ...task,
@@ -78,12 +91,12 @@ export function DoneTaskList({
       }
     });
 
-    setters.setDoneTasks(newTasks);
+    setDoneTaskList(newTasks);
     checkIfAnyTaskToRevert(newTasks);
   };
 
   const uncheckAllDoneTasks = () => {
-    const newTasks = doneTasks.map((task) => {
+    const newTasks = doneTaskList.map((task) => {
       return {
         ...task,
         checked: false,
@@ -91,11 +104,11 @@ export function DoneTaskList({
       };
     });
 
-    setters.setDoneTasks(newTasks);
+    setDoneTaskList(newTasks);
     checkIfAnyTaskToRevert(newTasks);
   };
 
-  const renderTasks = doneTasks.map((task: Task) => (
+  const renderTasks = doneTaskList.map((task: Task) => (
     <XStack key={task.id} ai="center" jc="flex-end" mt="$2">
       <XStack ai="center" jc="flex-end" gap="$2">
         <Text
@@ -123,7 +136,19 @@ export function DoneTaskList({
     </XStack>
   ));
   return (
-    <YStack f={1} gap="$8" px="$10" pt="$5" alignSelf="center">
+    <YStack
+      f={1}
+      gap="$8"
+      px="$10"
+      pt="$5"
+      alignSelf="center"
+      enterStyle={{
+        opacity: 0,
+        scale: 1.5,
+        x: -50,
+      }}
+      animation="quick"
+    >
       <ScrollView
         maxHeight={"80%"}
         backgroundColor="$background"
@@ -134,7 +159,7 @@ export function DoneTaskList({
         {renderTasks}
       </ScrollView>
       {checkedAny ? (
-        <XStack ai="center" jc="center" fw="wrap" b="$14" gap="$4">
+        <XStack ai="center" jc="center" fw="wrap" b="$12" gap="$4">
           <Button
             icon={ListEnd}
             backgroundColor={"$blue10"}
@@ -151,6 +176,8 @@ export function DoneTaskList({
             onPress={() => deleteCheckedTasks()}
           ></Button>
         </XStack>
+      ) : refreshButton ? (
+        <RefreshButton href={"/tasksDone"} onPress={() => refreshTasks()} />
       ) : (
         <></>
       )}

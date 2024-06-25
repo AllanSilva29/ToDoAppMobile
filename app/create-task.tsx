@@ -1,8 +1,12 @@
 import { View, YStack } from "tamagui";
 import { CreateTaskInput } from "app/components/CreateTaskInput";
 import { AnimatedGif } from "./components/AnimatedGif";
+import { useSelector } from "react-redux";
 
 export default function CreateTaskScreen() {
+  const appTheme = useSelector((state: any) => state.todoStore.appTheme);
+
+
   return (
     <View
       flex={1}
@@ -13,6 +17,7 @@ export default function CreateTaskScreen() {
         x: -50,
       }}
       animation="quick"
+      backgroundColor={appTheme}
     >
       <YStack margin="$3" padding="$2">
         <AnimatedGif />
