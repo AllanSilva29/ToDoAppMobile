@@ -1,6 +1,6 @@
 import { Link, Tabs } from "expo-router";
 import { Button, useTheme } from "tamagui";
-import { Home, NotebookPen, Cog } from "@tamagui/lucide-icons";
+import { Home, NotebookPen, Cog, Bot } from "@tamagui/lucide-icons";
 
 export default function TabLayout() {
   const theme = useTheme();
@@ -30,6 +30,13 @@ export default function TabLayout() {
         options={{
           title: "Tarefas Concluídas",
           tabBarIcon: ({ color }) => <NotebookPen color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="askAi"
+        options={{
+          title: "IA Chat",
+          tabBarIcon: ({ color }) => <Bot color={color} />,
         }}
       />
       <Tabs.Screen

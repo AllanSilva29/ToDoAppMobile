@@ -1,4 +1,5 @@
-import { View, YStack } from "tamagui";
+import { View, XStack, YStack, Text } from "tamagui";
+import { Link } from "expo-router";
 import { CreateTaskInput } from "app/components/CreateTaskInput";
 import { AnimatedGif } from "./components/AnimatedGif";
 import { useSelector } from "react-redux";
@@ -37,6 +38,14 @@ export default function CreateTaskScreen() {
             message: "Tarefa criada com sucesso!",
           }}
         />
+        <XStack alignSelf="center" mt="$6">
+          <Link href={"/askAi"}>
+            <Text color="$blue10" style={{ textDecorationLine: "underline" }}>
+              {" "}
+              Perguntar para IA
+            </Text>
+          </Link>
+        </XStack>
       </YStack>
     </View>
   );
