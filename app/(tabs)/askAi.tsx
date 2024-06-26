@@ -12,6 +12,7 @@ import {
 } from "tamagui";
 import axios from "axios";
 import appEnv from "utils/appEnv";
+import { useSelector } from "react-redux";
 
 interface Message {
   id: string;
@@ -58,7 +59,10 @@ const AIChatScreen: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [contextSent, setContextSent] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
+
+  const context = useSelector((state: any) => state.todoStore.todos);
 
   const getGroqChatCompletion = async (userMessage: string) => {
     try {
@@ -87,8 +91,8 @@ const AIChatScreen: React.FC = () => {
     }
   };
 
-  const handleSend = async () => {
-    if (inputText.trim()) {
+  const handleSend = async (optionalContext: string = "") => {
+    if (inputText.trim() || optionalContext) {
       const userMessage: Message = {
         id: Date.now().toString(),
         text: inputText.trim(),
@@ -99,7 +103,9 @@ const AIChatScreen: React.FC = () => {
       setIsLoading(true);
 
       // Get AI response from Groq
-      const aiResponse = await getGroqChatCompletion(userMessage.text);
+      const aiResponse = await getGroqChatCompletion(
+        optionalContext ? optionalContext : userMessage.text
+      );
 
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -116,6 +122,14 @@ const AIChatScreen: React.FC = () => {
       <MessageText isUser={item.isUser}>{item.text}</MessageText>
     </MessageBubble>
   );
+
+  const sendContextOnce = (context: any) => {
+    const messageContext = `. Por favor, importante, sempre responda em Português Brasileiro. 
+    Este é um chatbot de tarefas. Faça uma avaliação das tarefas pendentes que estão no array e retorne como resposta dicas.
+    Analise principalmente o 'description' de cada uma e dê dicas gerais sobre o que focar nas próximas atividades.`;
+
+    handleSend(JSON.stringify(context) + messageContext);
+  };
 
   useEffect(() => {
     //@ts-ignore
@@ -140,6 +154,19 @@ const AIChatScreen: React.FC = () => {
             scrollEnabled={false}
           />
         </ScrollView>
+        {!contextSent && (
+          <Button
+            onPress={() => sendContextOnce(context)}
+            backgroundColor="$blue5"
+            size="$4"
+            padding="$2"
+            margin="$2"
+            elevation={0}
+            borderRadius={10}
+          >
+            Pedir conselhos sobre tarefas
+          </Button>
+        )}
         <XStack padding={10} gap={10} backgroundColor="$background">
           <Input
             flex={1}
@@ -149,7 +176,7 @@ const AIChatScreen: React.FC = () => {
             autoCapitalize="none"
             editable={!isLoading}
           />
-          <Button onPress={handleSend} disabled={isLoading}>
+          <Button onPress={() => handleSend()} disabled={isLoading}>
             {isLoading ? "Enviando..." : "Enviar"}
           </Button>
         </XStack>
