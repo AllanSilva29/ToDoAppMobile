@@ -138,7 +138,7 @@ const AIChatScreen: React.FC = () => {
             scrollEnabled={false}
           />
         </ScrollView>
-        <XStack padding={10} space={10} backgroundColor="$background">
+        <XStack padding={10} gap={10} backgroundColor="$background">
           <Input
             flex={1}
             value={inputText}
