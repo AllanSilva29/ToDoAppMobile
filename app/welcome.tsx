@@ -1,4 +1,4 @@
-import { Anchor, Paragraph, XStack, YStack } from "tamagui";
+import { Anchor, Paragraph, XStack, YStack, Image } from "tamagui";
 
 export default function BoasVindas() {
   return (
@@ -42,6 +42,12 @@ export default function BoasVindas() {
             Desenvolvimento Mobile - UFPR
           </Anchor>
         </XStack>
+      </XStack>
+      <XStack b="$8">
+        <Image
+          source={require("assets/images/people.webp")}
+          style={{ width: 140, height: 120 }}
+        />
       </XStack>
     </YStack>
   );

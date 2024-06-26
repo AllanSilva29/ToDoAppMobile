@@ -104,7 +104,7 @@ export function TaskList({
           onCheckedChange={() => toggleTaskStatus(task.id)}
         >
           <Checkbox.Indicator>
-            <Check/>
+            <Check />
           </Checkbox.Indicator>
         </Checkbox>
         <Text
@@ -120,7 +120,12 @@ export function TaskList({
         </Text>
       </XStack>
       <XStack key={task.id} ai="center">
-        <Separator alignSelf="stretch" vertical marginHorizontal={15} />
+        <Separator
+          alignSelf="center"
+          vertical
+          marginHorizontal={15}
+          style={{}}
+        />
         <Paragraph
           mr="$3"
           color={task.status === "done" ? "$green10" : "$yellow10"}

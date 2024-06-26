@@ -2,7 +2,7 @@ const INITIAL_STATE = {
   todos: [],
   doneTodos: [],
   refreshButton: false,
-  appTheme: "dark",
+  appTheme: "#000000",
 };
 
 const todoReducer = (state = INITIAL_STATE, action) => {

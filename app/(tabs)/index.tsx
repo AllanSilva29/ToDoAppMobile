@@ -85,11 +85,8 @@ export default function TabHomeScreen() {
             <XStack ai="center" jc="center" fw="wrap" b="$8">
               <Paragraph>Nenhuma tarefa encontrada.</Paragraph>
               <Image
-                source={{
-                  uri: "assets/images/checklist-rafiki.png",
-                  width: 140,
-                  height: 180,
-                }}
+                source={require("assets/images/checklist-rafiki.png")}
+                style={{ width: 140, height: 180 }}
               />
               <H3 ta="center" mb="$4">
                 O que você vai fazer hoje?
@@ -99,7 +96,15 @@ export default function TabHomeScreen() {
               </Paragraph>
             </XStack>
           </YStack>
-          <YStack f={1} y={150} gap="$8" px="$10" pt="$5" alignSelf="center">
+          <YStack
+            f={1}
+            y={340}
+            gap="$8"
+            px="$10"
+            pt="$5"
+            alignSelf="center"
+            b="$12"
+          >
             {refreshButton ? (
               <RefreshButton href={"/"} onPress={() => refreshTasks()} />
             ) : (
