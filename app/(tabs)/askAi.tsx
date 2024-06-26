@@ -118,6 +118,7 @@ const AIChatScreen: React.FC = () => {
   );
 
   useEffect(() => {
+    //@ts-ignore
     scrollViewRef.current?.scrollToEnd({ animated: true });
   }, [messages]);
 
@@ -128,6 +129,7 @@ const AIChatScreen: React.FC = () => {
           flex={1}
           contentContainerStyle={{ padding: 10 }}
           onContentSizeChange={() =>
+            //@ts-ignore
             scrollViewRef.current?.scrollToEnd({ animated: true })
           }
         >
